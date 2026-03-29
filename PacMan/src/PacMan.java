@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.swing.*;
 
-public class PacMan extends JPanel{
+public class PacMan extends JPanel implements ActionListener{
     public class Block{
         int x;
         int y;
@@ -79,9 +79,7 @@ public class PacMan extends JPanel{
 
             // wallImage = new ImageIcon(getClass().getResource("/Images/wall.png")).getImage();
             wallImage = new ImageIcon("Images/wall.png").getImage();
-            // blueghostImage = new ImageIcon(getClass().getResource("/Images/blueGhost.png")).getImage();
             blueghostImage = new ImageIcon("Images/blueGhost.png").getImage();
-            // pinkghostImage = new ImageIcon(getClass().getResource("/Images/pinkGhost.png")).getImage();
             pinkghostImage = new ImageIcon("Images/pinkGhost.png").getImage();
             orangeghostImage = new ImageIcon("Images/orangeGhost.png").getImage();
             redghostImage = new ImageIcon("Images/redGhost.png").getImage();
@@ -93,11 +91,15 @@ public class PacMan extends JPanel{
 
             //Load the map and initialize the walls, food, ghosts, and pacman
             loadMap();
+            gameLoop = new Timer(50, this);
+            gameLoop.start();
         }
         public void loadMap(){
             walls = new HashSet<>();
             food = new HashSet<>();
             ghosts = new HashSet<>();
+
+            Timer gameLoop;
 
            for( int r = 0; r < rowcount; r++){
                 for( int c = 0; c < columncount; c++){
@@ -158,6 +160,10 @@ public class PacMan extends JPanel{
                 g.setColor(Color.YELLOW);
                 g.fillOval(foodBlock.x, foodBlock.y, foodBlock.width, foodBlock.height);
             }
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+           repaint();
         }
 }
 
