@@ -93,9 +93,6 @@ public class PacMan extends JPanel{
 
             //Load the map and initialize the walls, food, ghosts, and pacman
             loadMap();
-            System.out.println(walls.size());
-            System.out.println(food.size());
-            System.out.println(ghosts.size());
         }
         public void loadMap(){
             walls = new HashSet<>();
@@ -138,6 +135,19 @@ public class PacMan extends JPanel{
                     }   
         
                 }
+            }
+        }
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            //Draw the walls, food, ghosts, and pacman
+            draw(g);
+        }
+
+        public void draw(Graphics g){
+            g.drawImage(pacman.image,pacman.x, pacman.y, pacman.width, pacman.height, null);
+
+            for (Block ghost : ghosts){
+                g.drawImage(ghost.image, ghost.x, ghost.y, ghost.width, ghost.height, null);
             }
         }
 }
