@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.swing.*;
 
-public class PacMan extends JPanel implements ActionListener{
+public class PacMan extends JPanel implements ActionListener , KeyListener{
     public class Block{
         int x;
         int y;
@@ -14,6 +14,9 @@ public class PacMan extends JPanel implements ActionListener{
 
         int startX;
         int startY;
+        private char direction;
+        private int velocityX;
+        private int velocityY;
 
         Block(int x, int y, int width, int height, Image image){
             this.x = x;
@@ -24,8 +27,37 @@ public class PacMan extends JPanel implements ActionListener{
 
             this.startX = x;
             this.startY = y;
+            char direction = 'U'; // U = up, D = down, L = left, R = right
+            int velocityX = 0;
+            int velocityY = 0;
         }
-    }
+
+        void UpdateDirection(char direction){
+            this.direction = direction;
+            updateVelocity();
+        }
+
+        void updateVelocity(){
+            if(this.direction == 'U'){
+                this.velocityX = 0;
+                this.velocityY = -tileSize/4 ;
+    }else if(this.direction == 'D'){
+                this.velocityX = 0;
+                this.velocityY = tileSize/4 ;
+            }else if(this.direction == 'L'){
+                this.velocityX = -tileSize/4 ;
+                this.velocityY = 0;
+            }else if(this.direction == 'R'){
+                this.velocityX = tileSize/4 ;
+                this.velocityY = 0;
+            }
+        }
+
+        void move(){
+            this.x += velocityX;
+            this.y += velocityY;
+        }
+}
         private int rowcount = 21;
         private int columncount = 19;
         private int tileSize = 32;
@@ -76,6 +108,8 @@ public class PacMan extends JPanel implements ActionListener{
         PacMan(){
             setPreferredSize(new Dimension(boardWidth, boardHeight));
             setBackground(Color.BLACK);
+            addKeyListener(this);
+            setFocusable(true);
 
             // wallImage = new ImageIcon(getClass().getResource("/Images/wall.png")).getImage();
             wallImage = new ImageIcon("Images/wall.png").getImage();
@@ -91,15 +125,13 @@ public class PacMan extends JPanel implements ActionListener{
 
             //Load the map and initialize the walls, food, ghosts, and pacman
             loadMap();
-            gameLoop = new Timer(50, this);
-            gameLoop.start();
-        }
+              Timer gameLoop = new Timer(50, this); //20fps (1000/50)
+              gameLoop.start();
+            }
         public void loadMap(){
             walls = new HashSet<>();
             food = new HashSet<>();
             ghosts = new HashSet<>();
-
-            Timer gameLoop;
 
            for( int r = 0; r < rowcount; r++){
                 for( int c = 0; c < columncount; c++){
@@ -164,6 +196,30 @@ public class PacMan extends JPanel implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
            repaint();
+        }
+        @Override
+        public void keyTyped(KeyEvent e) {
+          
+        }
+        @Override
+        public void keyPressed(KeyEvent e) {
+          
+        }
+        @Override
+        public void keyReleased(KeyEvent e) {
+           if(e.getKeyCode() == KeyEvent.VK_UP){
+                pacman.UpdateDirection('U');
+                pacman.image = pacmanUpImage;
+            }else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+                pacman.UpdateDirection('D');
+                pacman.image = pacmanDownImage;
+            }else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+                pacman.UpdateDirection('L');
+                pacman.image = pacmanLeftImage;
+            }else if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+                pacman.UpdateDirection('R');
+                pacman.image = pacmanRightImage;
+            }
         }
 }
 
